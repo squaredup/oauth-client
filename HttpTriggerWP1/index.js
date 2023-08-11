@@ -15,6 +15,9 @@ const jsonSchema = {
             type: 'header', // or 'query' or 'body'
             path: 'Authorization'
         }
+    },
+    behaviour: {
+        mode: 'perToken', // or 'fixed'
     }
 };
 
@@ -24,13 +27,40 @@ module.exports = async function (context, req) {
     };
     context.log(`JavaScript ${_.get(obj, 'msg')} HTTP trigger function processed a request (v${v}).`);
 
-    const name = (req.query.name ?? req.body?.name);
-    const responseMessage = name
-        ? `Hello, ${name}. This Javascript ${_.get(obj, 'msg')} HTTP triggered function executed successfully (v${v}).`
-        : `This Javascript ${_.get(obj, 'msg')} HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response (v${v}).`;
+
+
+
+
+
+    // req.on('data', (chunk) => {
+    //     body.push(chunk);
+    //   }).on('end', () => {
+    //     // on end of data, perform necessary action
+    //     body = Buffer.concat(body).toString();
+    //     response.write(request.body.user);
+    //     response.end();
+    //   }
+
+
+
+
+    const report = {
+        req: JSON.stringify(req, null, 4),
+        headers: {},
+        body: req.body,
+        query: {}
+    };
+
+    for (const key of Object.keys(req.headers).sort()) {
+        report.headers[key] = req.headers[key];
+    }
+
+    for (const key of Object.keys(req.query).sort()) {
+        report.query[key] = req.query[key];
+    }
 
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: responseMessage
+        body: JSON.stringify(report, null, 4)
     };
 }
