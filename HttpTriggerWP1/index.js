@@ -1,5 +1,22 @@
 const _ = require('lodash');
-const v = 2;
+const v = 3;
+
+const jsonSchema = {
+    token: {
+        type: 'header', // or 'query' or 'body'
+        path: 'Authorization',
+        prefix: 'Bearer ',
+        isJwt: true
+    },
+    introspection: {
+        url: 'https://authr.server.com/token/introspection',
+        method: 'post', // or 'get
+        arg: {
+            type: 'header', // or 'query' or 'body'
+            path: 'Authorization'
+        }
+    }
+};
 
 module.exports = async function (context, req) {
     const obj = {
